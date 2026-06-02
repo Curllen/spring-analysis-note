@@ -1,9 +1,18 @@
 buildscript {
-	repositories {
-		maven { url "https://repo.spring.io/plugins-release" }
-	}
-	dependencies {
-		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
+    repositories {
+//        maven { url "https://repo.spring.io/plugins-release" } 需要认证, 故移除
+//        gradlePluginPortal()
+//        maven { url 'https://maven.aliyun.com/repository/public' }
+//        maven { url 'https://repo.spring.io/plugins-release-local' }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        maven { url "https://maven.aliyun.com/repository/spring-plugin" }
+        gradlePluginPortal()
+        //maven { url "https://repo.spring.io/plugins-release" }
+    }
+
+    dependencies {
+//		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
+        classpath("gradle.plugin.cn.bestwu.gradle:propdeps-plugin:0.0.9")
 		classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
 	}
 }
@@ -14,6 +23,10 @@ plugins {
 	id "org.jetbrains.kotlin.jvm" version "1.3.31" apply false
 	id "org.jetbrains.dokka" version "0.9.18"
 	id "org.asciidoctor.convert" version "1.5.8"
+
+    id "cn.bestwu.propdeps-idea" version "0.0.9"
+    id "cn.bestwu.propdeps-eclipse" version "0.0.9"
+    id("cn.bestwu.propdeps-maven") version "0.0.9"
 }
 
 ext {
@@ -61,7 +74,10 @@ configure(allprojects) { project ->
 	apply plugin: "java"
 	apply plugin: "kotlin"
 	apply plugin: "checkstyle"
-	apply plugin: "propdeps"
+//    apply plugin: "propdeps"
+    apply plugin: "cn.bestwu.propdeps-idea"
+    apply plugin: "cn.bestwu.propdeps-eclipse"
+    apply plugin: "cn.bestwu.propdeps-maven"
 	apply plugin: "test-source-set-dependencies"
 	apply plugin: "io.spring.dependency-management"
 	apply from: "${gradleScriptDir}/ide.gradle"
@@ -147,10 +163,19 @@ configure(allprojects) { project ->
 	}
 
 	repositories {
-		maven { url "https://repo.spring.io/libs-release" }
-		maven { url "https://repo.spring.io/milestone" } // Reactor
-		maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" } // RSocket
-		mavenLocal()
+//		maven { url "https://repo.spring.io/libs-release" }
+//		maven { url "https://repo.spring.io/milestone" } // Reactor
+//		maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" } // RSocket
+//		mavenLocal()
+
+        println "aliyun repositories ${project.name}"
+        mavenLocal()
+        maven{ url 'https://maven.aliyun.com/repository/central'}
+        maven{ url 'https://maven.aliyun.com/repository/public'}
+        maven{ url 'https://maven.aliyun.com/repository/googlr'}
+        maven{ url 'https://maven.aliyun.com/repository/spring'}
+        maven { url "https://repo.spring.io/plugins-release" }
+        mavenCentral()
 	}
 
 	dependencies {

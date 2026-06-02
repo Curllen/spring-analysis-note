@@ -180,16 +180,20 @@ task schemaZip(type: Zip) {
 		}?.withInputStream { schemas.load(it) }
 
 		for (def key : schemas.keySet()) {
-			def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
-			assert shortName != key
+			def shortName = key.replaceAll(/http.*\/schema\//, '').replaceAll(/\.xsd$/, '')
+			if (shortName == key) {
+				shortName = key.replaceAll(/.*schema\//, '').replaceAll(/\.xsd$/, '')
+			}
+			assert shortName != key : "Failed to extract short name from: $key"
 			File xsdFile = subproject.sourceSets.main.resources.find {
 				it.path.endsWith(schemas.get(key).replaceAll('\\/','\\\\'))
 			}
-			assert xsdFile != null
+			assert xsdFile != null : "XSD file not found for: $key"
 			into (shortName) {
 				from xsdFile.path
 			}
 		}
+
 	}
 }
 
